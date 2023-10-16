@@ -24,3 +24,20 @@ export const addTodo = async (formData): Promise<ITask> => {
     throw new Error(error);
   }
 };
+
+export const editTodo = async (formData): Promise<ITask> => {
+  try {
+    const response = await fetch(`${baseURL}/tasks/{formData.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("error");
+    throw new Error(error);
+  }
+};

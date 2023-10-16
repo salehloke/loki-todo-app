@@ -3,6 +3,7 @@ import Modal from "./Modal";
 import { useState } from "react";
 import { addTodo } from "../../../api";
 import { useRouter } from "next/navigation";
+import { v4 as uuid } from "uuid";
 
 export default function AddTask() {
     const router = useRouter();
@@ -15,7 +16,7 @@ export default function AddTask() {
             console.log("submit new todo", newTodo);
             // save to db
             await addTodo({
-                id: Math.random(),
+                id: uuid(),
                 title: newTodo,
                 description: newTodo,
             })

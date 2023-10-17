@@ -1,21 +1,6 @@
 {
   "tasks": [
     {
-      "id": 1,
-      "title": "Task 1",
-      "description": "This is a task description"
-    },
-    {
-      "id": 2,
-      "title": "Task 2",
-      "description": "This is a task description"
-    },
-    {
-      "id": 0.22647355120343837,
-      "title": "testing submit",
-      "description": "testing submit"
-    },
-    {
       "id": 0.9429162915879201,
       "title": "testing second submit",
       "description": "testing second submit"

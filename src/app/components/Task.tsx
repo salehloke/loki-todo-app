@@ -1,3 +1,4 @@
+"use client"
 
 import React from 'react'
 import { ITask } from '../../../types/task'
@@ -5,7 +6,7 @@ import { AiFillDelete, AiOutlinePlus } from 'react-icons/ai'
 import { FiEdit, FiTrash2 } from 'react-icons/fi'
 import Modal from './Modal'
 import { useRouter } from 'next/navigation'
-import { editTodo } from '../../../api'
+import { deleteTodo, editTodoPUT } from '../../../api'
 
 interface TaskProps {
     task: ITask
@@ -14,21 +15,42 @@ interface TaskProps {
 const Task: React.FC<TaskProps> = ({ task }) => {
     const router = useRouter()
     const [modalOpenEdit, setModalOpenEdit] = React.useState<boolean>(false);
-    const [editTodo, setEditTodo] = React.useState<string>('')
+    const [taskToEdit, setTaskToEdit] = React.useState<string>(task.title)
     const [taskId, setTaskId] = React.useState<string>(task.title)
+
+    const [modalOpenDelete, setModalOpenDelete] = React.useState<boolean>(false);
+
 
     const handleSubmitEditTodo: React.FormEventHandler<HTMLFormElement> = async (e) => {
         try {
             e.preventDefault();
-            console.log("submit new todo", editTodo);
+            console.log("submit new todo", taskToEdit);
             // save to db
-            // await editTodo({
-            //     id: taskId,
-            //     title: editTodo,
-            //     description: editTodo,
-            // })
+            await editTodoPUT({
+                id: task.id,
+                title: taskToEdit,
+                description: taskToEdit,
+            })
             // reset the value
-            setEditTodo("");
+            setTaskToEdit(task.title);
+            // close the modal
+            setModalOpenEdit(false);
+            // refresh the page
+            router.refresh();
+
+        } catch (error) {
+        }
+    }
+
+
+    const handleDeleteTodo: React.FormEventHandler<HTMLFormElement> = async (e) => {
+        try {
+            e.preventDefault();
+            console.log("submit new todo", taskToEdit);
+            // save to db
+            await deleteTodo(task.id)
+            // reset the value
+            setTaskToEdit(task.title);
             // close the modal
             setModalOpenEdit(false);
             // refresh the page
@@ -54,8 +76,8 @@ const Task: React.FC<TaskProps> = ({ task }) => {
                     <form onSubmit={(e) => handleSubmitEditTodo(e)}>
                         <div className="modal-action">
                             <input
-                                onChange={(e) => setEditTodo(e.target.value)}
-                                value={editTodo}
+                                onChange={(e) => setTaskToEdit(e.target.value)}
+                                value={taskToEdit}
                                 type="text"
                                 placeholder="Type here"
                                 className="input input-bordered w-full " />
@@ -69,8 +91,33 @@ const Task: React.FC<TaskProps> = ({ task }) => {
                     {/* end of EDIT FORM  */}
                 </Modal>
                 {/* end of EDIT MODAL */}
-                <FiTrash2 cursor='pointer' className='text-red-500' size={25} />
-
+                <FiTrash2 cursor='pointer' onClick={() => setModalOpenDelete(true)} className='text-red-500' size={25} />
+                {/* DELETE MODAL */}
+                <Modal
+                    modalOpen={modalOpenDelete}
+                    setModalOpen={setModalOpenDelete}
+                >
+                    <h3 className="text-lg font-bold">Are you sure you want to delete this task?</h3>
+                    {/* DELETE FORM */}
+                    <form onSubmit={(e) => handleSubmitEditTodo(e)}>
+                        <div className="modal-action">
+                            <button
+                                onClick={(e) => { handleDeleteTodo(e) }}
+                                type="submit"
+                                className="btn btn-danger">
+                                Yes
+                            </button>
+                            <button
+                                onClick={(e) => { setModalOpenDelete(false) }}
+                                type="submit"
+                                className="btn btn-secondary">
+                                No
+                            </button>
+                        </div>
+                    </form>
+                    {/* end of DELETE FORM  */}
+                </Modal>
+                {/* end of DELETE MODAL */}
             </td>
         </tr>
     )

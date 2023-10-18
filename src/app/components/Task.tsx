@@ -31,8 +31,6 @@ const Task: React.FC<TaskProps> = ({ task }) => {
                 title: taskToEdit,
                 description: taskToEdit,
             })
-            // reset the value
-            setTaskToEdit(task.title);
             // close the modal
             setModalOpenEdit(false);
             // refresh the page
@@ -63,7 +61,6 @@ const Task: React.FC<TaskProps> = ({ task }) => {
     return (
         <tr key={task.id}>
             <td className='w-full'>{task.title}</td>
-            <td>{task.description}</td>
             <td className='flex gap-5'>
                 <FiEdit cursor='pointer' onClick={() => { setModalOpenEdit(true) }} className='text-blue-500' size={25} />
                 {/* EDIT MODAL */}
